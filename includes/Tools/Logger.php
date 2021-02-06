@@ -1,6 +1,6 @@
 <?php
 
-namespace Release_Instructions;
+namespace ReleaseInstructions\Tools;
 
 /**
  * The file that defines the logger class for core plugin class.
@@ -8,8 +8,8 @@ namespace Release_Instructions;
  * @link       https://github.com/Zinkutal/release-instructions
  * @since      1.0.0
  *
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
+ * @subpackage ReleaseInstructions/Tools
  */
 
 /**
@@ -18,8 +18,8 @@ namespace Release_Instructions;
  * Used to define logger methods used by main plugin class.
  *
  * @since      1.0.0
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
+ * @subpackage ReleaseInstructions/Tools
  * @author     Alexander Kucherov <avdkucherov@gmail.com>
  */
 class Logger
@@ -42,7 +42,7 @@ class Logger
      *
      * @since 1.0.0
      */
-    public static function get_delimiter(): string
+    public static function getDelimiter(): string
     {
         return self::$delimiter;
     }
@@ -57,12 +57,14 @@ class Logger
      */
     public static function log(string $message, string $type)
     {
-        if ((new Utils())::is_cli()) {
+        if ((new Utils())::isCLI()) {
             self::cli($message, $type);
             return;
         }
 
-        echo esc_html('<pre>' . ($type ? '[' . $type . ']: ' : '') . $message . '</pre>');
+        if (function_exists('esc_html')) {
+            echo esc_html('<pre>' . ($type ? '[' . $type . ']: ' : '') . $message . '</pre>');
+        }
     }
 
     /**
@@ -80,27 +82,28 @@ class Logger
          * WP_CLI output methods.
          * @see https://make.wordpress.org/cli/handbook/references/internal-api/#output
          */
-        switch ($type) {
-            case 'success':
-                \WP_CLI::success($message);
-                break;
-            case 'status':
-            case 'found':
-            case 'info':
-            case 'x':
-            case ' ':
-                \WP_CLI::log(($type ? '[' . $type . ']: ' : '') . $message);
-                break;
-            case 'notice':
-            case 'warning':
-                \WP_CLI::warning($message);
-                break;
-            case 'error':
-                \WP_CLI::error($message);
-                break;
-            default:
-                \WP_CLI::log($message);
+        if ((new Utils())::isCLI()) {
+            switch ($type) {
+                case 'success':
+                    \WP_CLI::success($message);
+                    break;
+                case 'status':
+                case 'found':
+                case 'info':
+                case 'x':
+                case ' ':
+                    \WP_CLI::log(($type ? '[' . $type . ']: ' : '') . $message);
+                    break;
+                case 'notice':
+                case 'warning':
+                    \WP_CLI::warning($message);
+                    break;
+                case 'error':
+                    \WP_CLI::error($message);
+                    break;
+                default:
+                    \WP_CLI::log($message);
+            }
         }
     }
-
 }

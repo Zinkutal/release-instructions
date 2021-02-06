@@ -1,0 +1,22 @@
+{
+    "name": "wordpress/release-instructions",
+    "description": "Automated custom code deployment for WordPress. Example, migrate custom taxonomy, update records in a database, etc.",
+    "type": "library",
+    "require": {
+      "ext-json": "*"
+    },
+    "authors": [
+        {
+            "name": "Alexander Kucherov",
+            "email": "avdkucherov@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ReleaseInstructions\\": "includes",
+            "ReleaseInstructions\\Tools\\": "includes/Tools",
+            "ReleaseInstructions\\Command\\": "includes/Command"
+        }
+    },
+    "license": "GPLv3"
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Release_Instructions;
+namespace ReleaseInstructions\Command;
 
 /**
  * The file that defines the core command class for plugin.
@@ -8,16 +8,12 @@ namespace Release_Instructions;
  * @link       https://github.com/Zinkutal/release-instructions
  * @since      1.0.0
  *
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
+ * @subpackage ReleaseInstructions/Command
  */
 
-/**
- * Load core interface.
- */
-if (function_exists('plugin_dir_path')) {
-    require plugin_dir_path(__FILE__) . 'interface-core.php';
-}
+use ReleaseInstructions\Tools\Logger;
+use ReleaseInstructions\Tools\Utils;
 
 /**
  * Utility class.
@@ -25,11 +21,11 @@ if (function_exists('plugin_dir_path')) {
  * Used to define core command methods to extend child command methods. Example: CLI_Command
  *
  * @since      1.0.0
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
+ * @subpackage ReleaseInstructions/Command
  * @author     Alexander Kucherov <avdkucherov@gmail.com>
  */
-class Core_Command implements Core
+class CoreCommand implements CommandInterface
 {
 
     /**
@@ -61,7 +57,7 @@ class Core_Command implements Core
      *
      * @since 1.0.0
      */
-    public function log(string $message = '', string $status = ''): Core_Command
+    public function log(string $message = '', string $status = ''): CoreCommand
     {
         $this->logger::log($message, $status);
         return $this;
@@ -75,10 +71,10 @@ class Core_Command implements Core
      * @since 1.0.0
      * @access protected
      */
-    protected function get_plugins(): array
+    protected function getPlugins(): array
     {
         return array_filter(
-            get_plugins(),
+            Utils::getPlugins(),
             function ($plugin) {
                 return $plugin['RI'];
             }
@@ -93,18 +89,18 @@ class Core_Command implements Core
      * @since 1.0.0
      * @access protected
      */
-    protected function get_files(): array
+    protected function getFiles(): array
     {
-        if ($ri_files = wp_cache_get('plugins', 'ri')) {
+        if ($ri_files = Utils::cacheGet('plugins', 'ri')) {
             return $ri_files ?: array();
         }
 
         $ri_files = array();
-        if (!function_exists('plugin_dir_path')) {
+        if (!function_exists('plugin_dir_path') || !defined('WP_PLUGIN_DIR')) {
             return $ri_files;
         }
 
-        foreach ($this->get_plugins() as $plugin_key => $plugin) {
+        foreach ($this->getPlugins() as $plugin_key => $plugin) {
             $dir = WP_PLUGIN_DIR . '/' . plugin_dir_path($plugin_key) . 'ri';
             if (is_dir($dir)) {
                 if ($files = glob($dir . '/*[.ri.inc]')) {
@@ -118,7 +114,7 @@ class Core_Command implements Core
             }
         }
 
-        wp_cache_set('plugins', $ri_files, 'ri');
+        Utils::cacheSet('plugins', $ri_files, 'ri');
         return $ri_files;
     }
 
@@ -131,19 +127,19 @@ class Core_Command implements Core
      * @since 1.0.0
      * @access protected
      */
-    protected function get_updates($exclude_executed = true): array
+    protected function getUpdates($exclude_executed = true): array
     {
-        $cache_key = 'updates_' . md5(json_encode($this->get_files()) . $exclude_executed);
-        if ($updates = wp_cache_get($cache_key, 'ri')) {
+        $cache_key = 'updates_' . md5(json_encode($this->getFiles()) . $exclude_executed);
+        if ($updates = Utils::cacheGet($cache_key, 'ri')) {
             return $updates ?: array();
         }
 
         $updates = array();
-        foreach ($this->get_files() as $file) {
+        foreach ($this->getFiles() as $file) {
             // Load file.
-            (new Utils())::file_include($file['name']);
+            (new Utils())::fileInclude($file['name']);
 
-            $plugin = $this->get_plugins()[$file['plugin']];
+            $plugin = $this->getPlugins()[$file['plugin']];
             // Get function names prefix.
             $separator = '_';
             $function_name = trim(preg_replace('@[^a-z0-9_]+@', $separator, strtolower($plugin['Name'])), $separator);
@@ -176,14 +172,14 @@ class Core_Command implements Core
         if ($exclude_executed) {
             foreach ($updates as $plugin => $functions) {
                 foreach ($functions as $function => $version) {
-                    if ($this->status_get($function)) {
+                    if ($this->getStatus($function)) {
                         unset($updates[$plugin][$function]);
                     }
                 }
             }
         }
 
-        wp_cache_set($cache_key, $updates, 'ri');
+        Utils::cacheSet($cache_key, $updates, 'ri');
         return $updates;
     }
 
@@ -196,10 +192,10 @@ class Core_Command implements Core
      * @since 1.0.0
      * @access protected
      */
-    protected function function_execute($function = ''): Core_Command
+    protected function functionExecute($function = ''): CoreCommand
     {
         // Message.
-        $this->log($this->logger::get_delimiter() . "\n")->log('Running ' . $function . '()' . "\n");
+        $this->log($this->logger::getDelimiter() . "\n")->log('Running ' . $function . '()' . "\n");
 
         // Execute.
         $is_executed = false;
@@ -209,26 +205,28 @@ class Core_Command implements Core
             }
 
             // Mark as executed.
-            $is_executed = $this->status_set($function);
+            $is_executed = $this->setStatus($function);
         } else {
             $message = 'Release instruction ' . $function . '() does not exist.';
         }
 
         // Message.
-        return $this->log("\n")->log($message, $is_executed ? 'status' : 'notice')->log($this->logger::get_delimiter() . "\n\n");
+        return $this->log("\n")->log($message, $is_executed ? 'status' : 'notice')->log(
+            $this->logger::getDelimiter() . "\n\n"
+        );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function execute(string $function = ''): Core_Command
+    public function execute(string $function = ''): CoreCommand
     {
         // Preload the files.
-        $updates = $this->get_updates(false);
+        $updates = $this->getUpdates(false);
 
         // Function - direct matching case.
         if (false === strpos($function, '*')) {
-            $this->function_execute($function);
+            $this->functionExecute($function);
         } // Wildcard.
         else {
             $pattern = '@^' . str_replace('*', '.*', $function) . '$@';
@@ -237,7 +235,7 @@ class Core_Command implements Core
             foreach ($updates as $plugin => $functions) {
                 foreach ($functions as $_function => $version) {
                     if (preg_match($pattern, $_function)) {
-                        $this->function_execute($_function);
+                        $this->functionExecute($_function);
                     }
                 }
             }
@@ -250,20 +248,20 @@ class Core_Command implements Core
     /**
      * {@inheritdoc}
      */
-    public function execute_all(): Core_Command
+    public function executeAll(): CoreCommand
     {
         // Retrieve all RIs.
-        $updates = $this->get_updates(false);
+        $updates = $this->getUpdates(false);
 
         // Now run the updates.
         foreach ($updates as $plugin => $functions) {
             foreach ($functions as $function => $version) {
                 // Skip if already executed.
-                if ($this->status_get($function)) {
+                if ($this->getStatus($function)) {
                     continue;
                 }
 
-                $this->function_execute($function);
+                $this->functionExecute($function);
             }
         }
 
@@ -274,7 +272,7 @@ class Core_Command implements Core
     /**
      * {@inheritdoc}
      */
-    public function preview(bool $all = false): Core_Command
+    public function preview(bool $all = false): CoreCommand
     {
         // Message.
         $message = $all ? 'List of all release instructions:' : 'Release instructions to be executed (in order):';
@@ -282,13 +280,14 @@ class Core_Command implements Core
 
         $count = 0;
         $scheduled_exists = false;
-        foreach ($this->get_updates($all ? false : true) as $plugin => $functions) {
+        foreach ($this->getUpdates($all ? false : true) as $plugin => $functions) {
             foreach ($functions as $function => $version) {
                 $message = $function . '()' . "\n";
-                if (!($is_executed = $this->status_get($function))) {
+                if (!($is_executed = $this->getStatus($function))) {
                     $scheduled_exists = true;
                 }
-                $status = $all ? ($is_executed ? 'x' : ' ') : '';
+                $status_mark = $is_executed ? 'x' : ' ';
+                $status = $all ? $status_mark : '';
 
                 // Message.
                 $this->log($message, $status);
@@ -308,19 +307,19 @@ class Core_Command implements Core
     /**
      * {@inheritdoc}
      */
-    public function status_get(string $function = '')
+    public function getStatus(string $function = '')
     {
-        $ri_executed = get_site_option('ri_executed', array());
+        $ri_executed = Utils::getOption('ri_executed', array());
         return $function ? !empty($ri_executed[$function]) : $ri_executed;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function status_set(string $function = '', bool $flag = true)
+    public function setStatus(string $function = '', bool $flag = true)
     {
-        $ri_executed = $this->status_get();
+        $ri_executed = $this->getStatus();
         $ri_executed[$function] = $flag ? true : false;
-        return update_site_option('ri_executed', $ri_executed);
+        return Utils::setOption('ri_executed', $ri_executed);
     }
 }

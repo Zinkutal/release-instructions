@@ -1,6 +1,6 @@
 <?php
 
-namespace Release_Instructions;
+namespace ReleaseInstructions\Command;
 
 /**
  * The file that defines the core command interface.
@@ -8,8 +8,8 @@ namespace Release_Instructions;
  * @link       https://github.com/Zinkutal/release-instructions
  * @since      1.0.0
  *
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
+ * @subpackage ReleaseInstructions/Command
  */
 
 /**
@@ -18,40 +18,40 @@ namespace Release_Instructions;
  * Used to define RI plugin actions.
  *
  * @since      1.0.0
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
+ * @subpackage ReleaseInstructions/Command
  * @author     Alexander Kucherov <avdkucherov@gmail.com>
  */
-interface Core
+interface CommandInterface
 {
     /**
      * Runs a single release instruction.
      *
      * @param string $function Function name.
-     * @return $this
+     * @return self
      *
      * @since 1.0.0
      */
-    public function execute(string $function = ''): Core_Command;
+    public function execute(string $function = ''): CoreCommand;
 
     /**
      * Executes the release instructions.
      *
-     * @return $this
+     * @return self
      *
      * @since 1.0.0
      */
-    public function execute_all(): Core_Command;
+    public function executeAll(): CoreCommand;
 
     /**
      * Shows list of release instructions.
      *
      * @param bool $all Includes executed in a list.
-     * @return $this
+     * @return self
      *
      * @since 1.0.0
      */
-    public function preview(bool $all = false): Core_Command;
+    public function preview(bool $all = false): CoreCommand;
 
     /**
      * Returns release instruction status(-es).
@@ -61,7 +61,7 @@ interface Core
      *
      * @since 1.0.0
      */
-    public function status_get(string $function = '');
+    public function getStatus(string $function = '');
 
     /**
      * Sets release instruction status.
@@ -72,5 +72,5 @@ interface Core
      *
      * @since 1.0.0
      */
-    public function status_set(string $function = '', bool $flag = true);
+    public function setStatus(string $function = '', bool $flag = true);
 }

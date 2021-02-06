@@ -1,7 +1,5 @@
 <?php
 
-use Release_Instructions\Release_Instructions;
-
 /**
  * The plugin bootstrap file
  *
@@ -18,7 +16,7 @@ use Release_Instructions\Release_Instructions;
  * Plugin Name:       Release Instructions
  * Plugin URI:        https://github.com/Zinkutal/release-instructions
  * Description:       Run custom code per deployment/release.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Alexander Kucherov (avdkucherov@gmail.com)
  * Author URI:        https://github.com/Zinkutal
  * License:           GPL-3.0
@@ -39,14 +37,14 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('RELEASE_INSTRUCTIONS_VERSION', '1.0.0');
+define('RELEASE_INSTRUCTIONS_VERSION', '1.0.1');
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
 if (function_exists('plugin_dir_path')) {
-    require plugin_dir_path(__FILE__) . 'includes/class-release-instructions.php';
+    require plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 }
 
 /**
@@ -58,20 +56,4 @@ if (function_exists('plugin_dir_path')) {
  *
  * @since 1.0.0
  */
-function run_release_instructions()
-{
-    $plugin = new Release_Instructions();
-    $plugin->run();
-}
-
-/**
- * Extends plugin headers to support Release Instructions plugin.
- */
-add_filter(
-    'extra_plugin_headers',
-    function () {
-        return array('RI' => 'RI');
-    }
-);
-
-run_release_instructions();
+(new ReleaseInstructions\ReleaseInstructions())->run();

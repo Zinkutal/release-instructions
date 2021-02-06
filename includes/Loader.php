@@ -1,6 +1,6 @@
 <?php
 
-namespace Release_Instructions;
+namespace ReleaseInstructions;
 
 /**
  * Register all actions and filters for the plugin.
@@ -8,8 +8,7 @@ namespace Release_Instructions;
  * @link       https://github.com/Zinkutal/release-instructions
  * @since      1.0.0
  *
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
  */
 
 /**
@@ -20,8 +19,7 @@ namespace Release_Instructions;
  * run function to execute the list of actions and filters.
  *
  * @since      1.0.0
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
  * @author     Alexander Kucherov <avdkucherov@gmail.com>
  */
 class Loader
@@ -69,8 +67,13 @@ class Loader
      *
      * @since 1.0.0
      */
-    public function add_action($hook, $component, $callback, $priority = 10, $accepted_args = 1)
-    {
+    public function addAction(
+        string $hook,
+        object $component,
+        string $callback,
+        int $priority = 10,
+        int $accepted_args = 1
+    ): void {
         $this->actions = $this->add($this->actions, $hook, $component, $callback, $priority, $accepted_args);
     }
 
@@ -85,8 +88,13 @@ class Loader
      *
      * @since 1.0.0
      */
-    public function add_filter($hook, $component, $callback, $priority = 10, $accepted_args = 1)
-    {
+    public function addFilter(
+        string $hook,
+        object $component,
+        string $callback,
+        int $priority = 10,
+        int $accepted_args = 1
+    ): void {
         $this->filters = $this->add($this->filters, $hook, $component, $callback, $priority, $accepted_args);
     }
 
@@ -105,8 +113,14 @@ class Loader
      * @since 1.0.0
      * @access private
      */
-    private function add($hooks, $hook, $component, $callback, $priority, $accepted_args)
-    {
+    private function add(
+        array $hooks,
+        string $hook,
+        object $component,
+        string $callback,
+        int $priority,
+        int $accepted_args
+    ): array {
         $hooks[] = array(
             'hook' => $hook,
             'component' => $component,
@@ -123,25 +137,28 @@ class Loader
      *
      * @since 1.0.0
      */
-    public function run()
+    public function run(): void
     {
         foreach ($this->filters as $hook) {
-            add_filter(
-                $hook['hook'],
-                array($hook['component'], $hook['callback']),
-                $hook['priority'],
-                $hook['accepted_args']
-            );
+            if (function_exists('add_filter')) {
+                add_filter(
+                    $hook['hook'],
+                    array($hook['component'], $hook['callback']),
+                    $hook['priority'],
+                    $hook['accepted_args']
+                );
+            }
         }
 
         foreach ($this->actions as $hook) {
-            add_action(
-                $hook['hook'],
-                array($hook['component'], $hook['callback']),
-                $hook['priority'],
-                $hook['accepted_args']
-            );
+            if (function_exists('add_action')) {
+                add_action(
+                    $hook['hook'],
+                    array($hook['component'], $hook['callback']),
+                    $hook['priority'],
+                    $hook['accepted_args']
+                );
+            }
         }
     }
-
 }

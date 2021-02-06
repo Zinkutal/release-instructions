@@ -9,3 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Core functionality.
 - WP-CLI support.
+
+## [1.0.1] - 2021-02-06
+
+### Added
+- Composer support.

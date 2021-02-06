@@ -1,6 +1,13 @@
 <?php
 
-namespace Release_Instructions;
+namespace ReleaseInstructions\Command;
+
+use ReleaseInstructions\Tools\Utils;
+
+// Depends on WP-CLI tool.
+if (!Utils::isCLI()) {
+    die;
+}
 
 /**
  * The file that defines the cli plugin functionality.
@@ -8,27 +15,27 @@ namespace Release_Instructions;
  * @link       https://github.com/Zinkutal/release-instructions
  * @since      1.0.0
  *
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
+ * @subpackage ReleaseInstructions/Command
  */
 
-\WP_CLI::add_command('ri', (new CLI_Command()));
+\WP_CLI::add_command('ri', (new CLICommand()));
 
 /**
  * Implements Release Instructions commands for the WP-CLI framework.
  *
  * @since      1.0.0
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
+ * @subpackage ReleaseInstructions/Command
  * @author     Alexander Kucherov <avdkucherov@gmail.com>
  * @see        https://github.com/wp-cli/wp-cli
  */
-class CLI_Command
+class CLICommand
 {
     /**
      * Core Command functionality.
      *
-     * @var Core_Command Responsible for running release-instructions.
+     * @var CoreCommand Responsible for running release-instructions.
      *
      * @since 1.0.0
      * @access protected
@@ -44,7 +51,7 @@ class CLI_Command
      */
     public function __construct()
     {
-        $this->core = new Core_Command();
+        $this->core = new CoreCommand();
     }
 
     /**
@@ -82,9 +89,9 @@ class CLI_Command
      *
      * @since 1.0.0
      */
-    public function execute_all()
+    public function executeAll()
     {
-        $this->core->execute_all();
+        $this->core->executeAll();
     }
 
     /**
@@ -140,13 +147,13 @@ class CLI_Command
     {
         if (count($args) > 1) {
             list($function, $flag) = $args;
-            $this->core->status_set((string)$function, (bool)$flag);
+            $this->core->setStatus((string)$function, (bool)$flag);
             $this->core->log(sprintf('Status for %s() was set to "%d".', $function, $flag ? 1 : 0), 'success');
             return;
         }
 
         list($function,) = $args;
-        $status = $this->core->status_get((string)$function);
+        $status = $this->core->getStatus((string)$function);
         $this->core->log(sprintf('Status for %s() is "%d".', $function, $status ? 1 : 0), 'success');
     }
 

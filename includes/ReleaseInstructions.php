@@ -1,6 +1,6 @@
 <?php
 
-namespace Release_Instructions;
+namespace ReleaseInstructions;
 
 /**
  * The file that defines the core plugin class.
@@ -11,9 +11,11 @@ namespace Release_Instructions;
  * @link       https://github.com/Zinkutal/release-instructions
  * @since      1.0.0
  *
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
  */
+
+use ReleaseInstructions\Tools\Utils;
+use ReleaseInstructions\Command\CoreCommand;
 
 /**
  * The core plugin class.
@@ -24,11 +26,10 @@ namespace Release_Instructions;
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    Release_Instructions
- * @subpackage Release_Instructions/includes
+ * @package    ReleaseInstructions
  * @author     Alexander Kucherov <avdkucherov@gmail.com>
  */
-class Release_Instructions
+class ReleaseInstructions
 {
 
     /**
@@ -65,7 +66,7 @@ class Release_Instructions
     /**
      * The core functionality of the plugin.
      *
-     * @var Core_Command $core Core functionality.
+     * @var CoreCommand $core Core functionality.
      *
      * @since 1.0.0
      * @access protected
@@ -85,12 +86,12 @@ class Release_Instructions
         if (defined('RELEASE_INSTRUCTIONS_VERSION')) {
             $this->version = RELEASE_INSTRUCTIONS_VERSION;
         } else {
-            $this->version = '1.0.0';
+            $this->version = '1.0.1';
         }
 
         $this->release_instructions = 'release-instructions';
-        $this->load_dependencies();
-        $this->ri = new Core_Command();
+        $this->loadDependencies();
+        $this->ri = new CoreCommand();
     }
 
     /**
@@ -110,37 +111,19 @@ class Release_Instructions
      * @since 1.0.0
      * @access private
      */
-    private function load_dependencies()
+    private function loadDependencies(): ReleaseInstructions
     {
-        /**
-         * The class responsible for orchestrating the actions and filters of the
-         * core plugin.
-         */
-        require_once plugin_dir_path(__DIR__) . 'includes/class-loader.php';
-
-        /**
-         * The class responsible for managing helper functions.
-         */
-        require_once plugin_dir_path(__DIR__) . 'includes/class-utils.php';
-
-        /**
-         * The class responsible for logging actions.
-         */
-        require_once plugin_dir_path(__DIR__) . 'includes/class-logger.php';
-
-        /**
-         * The class responsible for core functionality.
-         */
-        require_once plugin_dir_path(__DIR__) . 'includes/class-core-command.php';
-
         /**
          * The class responsible for defining command line commands.
          */
-        if ((new Utils())::is_cli()) {
-            require_once plugin_dir_path(__DIR__) . 'includes/class-cli-command.php';
+        if ((new Utils())::isCLI()) {
+            if (function_exists('plugin_dir_path')) {
+                require_once plugin_dir_path(__DIR__) . 'includes/Command/CLICommand.php';
+            }
         }
 
         $this->loader = new Loader();
+        $this->loader->addFilter('extra_plugin_headers', $this, 'addRiHeader');
 
         return $this;
     }
@@ -150,11 +133,19 @@ class Release_Instructions
      *
      * @since 1.0.0
      */
-    public function run()
+    public function run(): ReleaseInstructions
     {
         $this->loader->run();
 
         return $this;
+    }
+
+    /**
+     * Extends plugin headers to support Release Instructions plugin.
+     */
+    public function addRiHeader(): array
+    {
+        return array('RI' => 'RI');
     }
 
     /**
@@ -165,7 +156,7 @@ class Release_Instructions
      *
      * @since 1.0.0
      */
-    public function get_release_instructions()
+    public function getReleaseInstructions(): string
     {
         return $this->release_instructions;
     }
@@ -177,7 +168,7 @@ class Release_Instructions
      *
      * @since 1.0.0
      */
-    public function get_loader()
+    public function getLoader(): Loader
     {
         return $this->loader;
     }
@@ -189,7 +180,7 @@ class Release_Instructions
      *
      * @since 1.0.0
      */
-    public function get_version()
+    public function getVersion(): string
     {
         return $this->version;
     }
@@ -197,13 +188,12 @@ class Release_Instructions
     /**
      * Retrieve core functionality.
      *
-     * @return Core_Command Core functionality.
+     * @return CoreCommand Core functionality.
      *
      * @since 1.0.0
      */
-    public function get_ri()
+    public function getRi(): CoreCommand
     {
         return $this->ri;
     }
-
 }
