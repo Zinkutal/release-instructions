@@ -19,7 +19,7 @@ if (!Utils::isCLI()) {
  * @subpackage ReleaseInstructions/Command
  */
 
-\WP_CLI::add_command('ri', (new CLICommand()));
+\WP_CLI::add_command(RI_PREFIX, (new CLICommand()));
 
 /**
  * Implements Release Instructions commands for the WP-CLI framework.
@@ -71,7 +71,7 @@ class CLICommand
      *
      * @since 1.0.0
      */
-    public function execute($args)
+    public function execute($args): void
     {
         list($function) = $args;
         $this->core->execute((string)$function);
@@ -89,7 +89,7 @@ class CLICommand
      *
      * @since 1.0.0
      */
-    public function executeAll()
+    public function executeAll(): void
     {
         $this->core->executeAll();
     }
@@ -113,7 +113,7 @@ class CLICommand
      *
      * @since 1.0.0
      */
-    public function peview($args)
+    public function peview($args): void
     {
         if ($args) {
             list($all) = $args;
@@ -143,7 +143,7 @@ class CLICommand
      *
      * @since 1.0.0
      */
-    public function status($args)
+    public function status($args): void
     {
         if (count($args) > 1) {
             list($function, $flag) = $args;

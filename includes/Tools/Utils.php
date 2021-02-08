@@ -43,11 +43,9 @@ class Utils
      */
     public static function fileInclude(string $file)
     {
-        if (function_exists('plugin_dir_path')) {
-            if (is_file($file)) {
-                require_once $file;
-                return $file;
-            }
+        if (function_exists('plugin_dir_path') && is_file($file)) {
+            require_once $file;
+            return $file;
         }
 
         return false;
@@ -63,7 +61,7 @@ class Utils
      *
      * @since 1.0.1
      */
-    public static function cacheGet($key, $group = '', $force = false, $found = null)
+    public static function cacheGet($key, $group = RI_PREFIX, $force = false, $found = null)
     {
         if (function_exists('wp_cache_get')) {
             return wp_cache_get($key, $group, $force, $found);
@@ -82,7 +80,7 @@ class Utils
      *
      * @since 1.0.1
      */
-    public static function cacheSet($key, $data, $group = 'default', $expire = 0): bool
+    public static function cacheSet($key, $data, $group = RI_PREFIX, $expire = 0): bool
     {
         if (function_exists('wp_cache_set')) {
             return wp_cache_set($key, $data, $group, $expire);

@@ -55,7 +55,7 @@ class Logger
      *
      * @since 1.0.0
      */
-    public static function log(string $message, string $type)
+    public static function log(string $message, string $type): void
     {
         if ((new Utils())::isCLI()) {
             self::cli($message, $type);
@@ -76,7 +76,7 @@ class Logger
      * @since 1.0.0
      * @access protected
      */
-    protected static function cli(string $message, string $type)
+    protected static function cli(string $message, string $type): void
     {
         /**
          * WP_CLI output methods.

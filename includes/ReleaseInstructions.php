@@ -16,6 +16,9 @@ namespace ReleaseInstructions;
 
 use ReleaseInstructions\Tools\Utils;
 use ReleaseInstructions\Command\CoreCommand;
+use ReleaseInstructions\Admin\ListTable;
+
+use function ReleaseInstructions\Admin\View\render_release_instructions;
 
 /**
  * The core plugin class.
@@ -74,6 +77,16 @@ class ReleaseInstructions
     protected $ri;
 
     /**
+     * The dashboard functionality of the plugin.
+     *
+     * @var ListTable $admin Dashboard functionality.
+     *
+     * @since 1.1.0
+     * @access protected
+     */
+    protected $admin;
+
+    /**
      * Define the core functionality of the plugin.
      *
      * Set the release instructions and the plugin version that can be used throughout the plugin.
@@ -92,6 +105,37 @@ class ReleaseInstructions
         $this->release_instructions = 'release-instructions';
         $this->loadDependencies();
         $this->ri = new CoreCommand();
+        $this->admin = new ListTable();
+    }
+
+    /**
+     * Adds settings page to a tools section.
+     */
+    public function adminMenu(): void
+    {
+        $hook = add_management_page(
+            'Manage Release Instructions',
+            'Release Instructions',
+            'manage_options',
+            'release-instructions',
+            'ReleaseInstructions\Admin\View\render_release_instructions'
+        );
+        // @todo: Review hook init below.
+        $this->loader->addAction("load-$hook", $this, 'addScreenOptions');
+    }
+
+    /**
+     * @todo: Review hook below.
+     */
+    function addScreenOptions()
+    {
+        $option = 'per_page';
+        $args = array(
+            'label' => 'ReleaseInstructions',
+            'default' => 20,
+            'option' => RI_PREFIX . '_per_page'
+        );
+        add_screen_option($option, $args);
     }
 
     /**
@@ -99,11 +143,8 @@ class ReleaseInstructions
      *
      * Include the following files that make up the plugin:
      *
-     * - Loader. Orchestrates the hooks of the plugin.
-     * - Utils. Adds helper functions.
-     * - Logger. Logs all actions and events.
-     * - Core_Command. Defines all core commands.
      * - CLI_Command. Defines all cli commands.
+     * - Loader. Orchestrates the hooks of the plugin.
      *
      * Create an instance of the loader which will be used to register the hooks
      * with WordPress.
@@ -116,14 +157,13 @@ class ReleaseInstructions
         /**
          * The class responsible for defining command line commands.
          */
-        if ((new Utils())::isCLI()) {
-            if (function_exists('plugin_dir_path')) {
-                require_once plugin_dir_path(__DIR__) . 'includes/Command/CLICommand.php';
-            }
+        if ((new Utils())::isCLI() && function_exists('plugin_dir_path')) {
+            require_once plugin_dir_path(__DIR__) . 'includes/Command/CLICommand.php';
         }
 
         $this->loader = new Loader();
         $this->loader->addFilter('extra_plugin_headers', $this, 'addRiHeader');
+        $this->loader->addAction('admin_menu', $this, 'adminMenu');
 
         return $this;
     }

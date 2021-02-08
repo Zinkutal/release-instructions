@@ -39,6 +39,9 @@ if (!defined('WPINC')) {
  */
 define('RELEASE_INSTRUCTIONS_VERSION', '1.0.1');
 
+// Prefix for internal usage.
+const RI_PREFIX = 'ri';
+
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.

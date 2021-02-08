@@ -32,6 +32,7 @@ class ComposerStaticInit8463ddca9500d7a6db8deaeb395db58f
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'ReleaseInstructions\\Admin\\ListTable' => __DIR__ . '/../..' . '/includes/Admin/ListTable.php',
         'ReleaseInstructions\\Command\\CLICommand' => __DIR__ . '/../..' . '/includes/Command/CLICommand.php',
         'ReleaseInstructions\\Command\\CommandInterface' => __DIR__ . '/../..' . '/includes/Command/CommandInterface.php',
         'ReleaseInstructions\\Command\\CoreCommand' => __DIR__ . '/../..' . '/includes/Command/CoreCommand.php',

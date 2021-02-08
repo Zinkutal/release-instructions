@@ -76,7 +76,7 @@ class CoreCommand implements CommandInterface
         return array_filter(
             Utils::getPlugins(),
             function ($plugin) {
-                return $plugin['RI'];
+                return $plugin[strtoupper(RI_PREFIX)] ?? '';
             }
         );
     }
@@ -91,7 +91,7 @@ class CoreCommand implements CommandInterface
      */
     protected function getFiles(): array
     {
-        if ($ri_files = Utils::cacheGet('plugins', 'ri')) {
+        if ($ri_files = Utils::cacheGet('plugins')) {
             return $ri_files ?: array();
         }
 
@@ -101,20 +101,21 @@ class CoreCommand implements CommandInterface
         }
 
         foreach ($this->getPlugins() as $plugin_key => $plugin) {
-            $dir = WP_PLUGIN_DIR . '/' . plugin_dir_path($plugin_key) . 'ri';
+            $dir = WP_PLUGIN_DIR . '/' . plugin_dir_path($plugin_key) . RI_PREFIX;
             if (is_dir($dir)) {
                 if ($files = glob($dir . '/*[.ri.inc]')) {
                     foreach ($files as $file) {
                         $ri_files[] = array(
                             'plugin' => $plugin_key,
                             'name' => $file,
+                            'pluginName' => $plugin['Name'],
                         );
                     }
                 }
             }
         }
 
-        Utils::cacheSet('plugins', $ri_files, 'ri');
+        Utils::cacheSet('plugins', $ri_files);
         return $ri_files;
     }
 
@@ -130,7 +131,7 @@ class CoreCommand implements CommandInterface
     protected function getUpdates($exclude_executed = true): array
     {
         $cache_key = 'updates_' . md5(json_encode($this->getFiles()) . $exclude_executed);
-        if ($updates = Utils::cacheGet($cache_key, 'ri')) {
+        if ($updates = Utils::cacheGet($cache_key)) {
             return $updates ?: array();
         }
 
@@ -157,7 +158,7 @@ class CoreCommand implements CommandInterface
             foreach (preg_grep('/_\d+$/', $functions['user']) as $function) {
                 // If this function is a module update function, add it to the list of module updates.
                 if (preg_match($regexp, $function, $matches)) {
-                    $updates[$file['plugin']][$function] = $matches['version'];
+                    $updates[$file['pluginName']][$function] = $matches['version'];
                 }
             }
 
@@ -179,8 +180,39 @@ class CoreCommand implements CommandInterface
             }
         }
 
-        Utils::cacheSet($cache_key, $updates, 'ri');
+        Utils::cacheSet($cache_key, $updates);
         return $updates;
+    }
+
+    /**
+     * Returns the enriched list of all the RIs available.
+     *
+     * @return array Returns assoc array, with a list of RI-supported plugins, with all RIs attached.
+     *
+     * @since 1.1.0
+     */
+    public function getItems(): array
+    {
+        $cache_key = 'items_' . md5(json_encode($this->getUpdates(false)));
+        if ($items = Utils::cacheGet($cache_key)) {
+            return $items ?: array();
+        }
+
+        $items = [];
+        $updates = $this->getUpdates(false);
+        foreach ($updates as $plugin => $functions) {
+            foreach ($functions as $function => $version) {
+                $items[] = [
+                    'title' => $function,
+                    'plugin' => $plugin,
+                    'version' => $version,
+                    'status' => $this->getStatus($function),
+                ];
+            }
+        }
+
+        Utils::cacheSet($cache_key, $items);
+        return $items;
     }
 
     /**
@@ -316,7 +348,7 @@ class CoreCommand implements CommandInterface
     /**
      * {@inheritdoc}
      */
-    public function setStatus(string $function = '', bool $flag = true)
+    public function setStatus(string $function = '', bool $flag = true): bool
     {
         $ri_executed = $this->getStatus();
         $ri_executed[$function] = $flag ? true : false;

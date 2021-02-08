@@ -28,7 +28,7 @@ interface CommandInterface
      * Runs a single release instruction.
      *
      * @param string $function Function name.
-     * @return self
+     * @return CoreCommand
      *
      * @since 1.0.0
      */
@@ -37,7 +37,7 @@ interface CommandInterface
     /**
      * Executes the release instructions.
      *
-     * @return self
+     * @return CoreCommand
      *
      * @since 1.0.0
      */
@@ -47,7 +47,7 @@ interface CommandInterface
      * Shows list of release instructions.
      *
      * @param bool $all Includes executed in a list.
-     * @return self
+     * @return CoreCommand
      *
      * @since 1.0.0
      */
@@ -72,5 +72,5 @@ interface CommandInterface
      *
      * @since 1.0.0
      */
-    public function setStatus(string $function = '', bool $flag = true);
+    public function setStatus(string $function = '', bool $flag = true): bool;
 }
