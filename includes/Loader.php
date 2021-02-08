@@ -73,8 +73,9 @@ class Loader
         string $callback,
         int $priority = 10,
         int $accepted_args = 1
-    ): void {
+    ): Loader {
         $this->actions = $this->add($this->actions, $hook, $component, $callback, $priority, $accepted_args);
+        return $this;
     }
 
     /**
@@ -94,8 +95,9 @@ class Loader
         string $callback,
         int $priority = 10,
         int $accepted_args = 1
-    ): void {
+    ): Loader {
         $this->filters = $this->add($this->filters, $hook, $component, $callback, $priority, $accepted_args);
+        return $this;
     }
 
     /**
@@ -137,7 +139,7 @@ class Loader
      *
      * @since 1.0.0
      */
-    public function run(): void
+    public function run(): Loader
     {
         foreach ($this->filters as $hook) {
             if (function_exists('add_filter')) {
@@ -160,5 +162,7 @@ class Loader
                 );
             }
         }
+
+        return $this;
     }
 }

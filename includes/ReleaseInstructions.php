@@ -101,15 +101,13 @@ class ReleaseInstructions
         } else {
             $this->version = '1.0.1';
         }
-
         $this->release_instructions = 'release-instructions';
         $this->loadDependencies();
         $this->ri = new CoreCommand();
-        $this->admin = new ListTable();
     }
 
     /**
-     * Adds settings page to a tools section.
+     * Adds settings/management page to a tools section.
      */
     public function adminMenu(): void
     {
@@ -118,7 +116,7 @@ class ReleaseInstructions
             'Release Instructions',
             'manage_options',
             'release-instructions',
-            'ReleaseInstructions\Admin\View\render_release_instructions'
+            [$this, 'renderManagementPage']
         );
         // @todo: Review hook init below.
         $this->loader->addAction("load-$hook", $this, 'addScreenOptions');
@@ -127,7 +125,7 @@ class ReleaseInstructions
     /**
      * @todo: Review hook below.
      */
-    function addScreenOptions()
+    public function addScreenOptions(): void
     {
         $option = 'per_page';
         $args = array(
@@ -136,6 +134,14 @@ class ReleaseInstructions
             'option' => RI_PREFIX . '_per_page'
         );
         add_screen_option($option, $args);
+    }
+
+    /**
+     * Render management page.
+     */
+    public function renderManagementPage(): void
+    {
+        render_release_instructions();
     }
 
     /**
@@ -161,9 +167,17 @@ class ReleaseInstructions
             require_once plugin_dir_path(__DIR__) . 'includes/Command/CLICommand.php';
         }
 
+        /**
+         * View functions.
+         */
+        if (function_exists('plugin_dir_path')) {
+            require_once plugin_dir_path(__DIR__) . 'includes/Admin/View/ListFunctions.php';
+        }
+
         $this->loader = new Loader();
-        $this->loader->addFilter('extra_plugin_headers', $this, 'addRiHeader');
-        $this->loader->addAction('admin_menu', $this, 'adminMenu');
+        $this->loader
+            ->addFilter('extra_plugin_headers', $this, 'addRiHeader')
+            ->addAction('admin_menu', $this, 'adminMenu');
 
         return $this;
     }

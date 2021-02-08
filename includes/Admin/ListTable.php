@@ -12,21 +12,6 @@ namespace ReleaseInstructions\Admin;
  * @subpackage ReleaseInstructions/Admin
  */
 
-// @todo: Replace dirty dependencies below with a proper hook init.
-if (!class_exists('WP_List_Table')) {
-    if (!defined('ABSPATH')) {
-        exit;
-    }
-    require_once(ABSPATH . 'wp-admin/includes/class-wp-screen.php');//added
-    require_once(ABSPATH . 'wp-admin/includes/screen.php');//added
-    require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
-    require_once(ABSPATH . 'wp-admin/includes/template.php');
-}
-
-if (function_exists('plugin_dir_path')) {
-    require_once plugin_dir_path(__FILE__) . 'View/ListFunctions.php';
-}
-
 use WP_List_Table;
 
 use function ReleaseInstructions\Admin\View\_get_all_release_instruction;
