@@ -2,9 +2,9 @@
 Contributors: avdkucherov
 Tags: code, deployment, release, instructions, automated, cli, wp-cli
 Requires at least: 4.9.4
-Tested up to: 5.6
-Requires PHP: 7.3
-Stable tag: 1.0.2
+Tested up to: 5.6.2
+Requires PHP: 7.4
+Stable tag: 1.0.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -58,6 +58,11 @@ Maybe a nice thing to have, but not required for now.
 
 = 1.0.2 =
 * Better multi-siting support.
+
+= 1.0.3 =
+
+### Added
+- GH Actions && PHP CS.
 
 == WP-CLI commands ==
 
