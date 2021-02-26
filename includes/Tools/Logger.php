@@ -57,12 +57,12 @@ class Logger
      */
     public static function log(string $message, string $type)
     {
-        if ((new Utils())::isCLI()) {
+        if (Utils::isCLI()) {
             self::cli($message, $type);
             return;
         }
 
-        if (function_exists('esc_html')) {
+        if (\function_exists('esc_html')) {
             echo esc_html('<pre>' . ($type ? '[' . $type . ']: ' : '') . $message . '</pre>');
         }
     }
@@ -82,7 +82,7 @@ class Logger
          * WP_CLI output methods.
          * @see https://make.wordpress.org/cli/handbook/references/internal-api/#output
          */
-        if ((new Utils())::isCLI()) {
+        if (Utils::isCLI()) {
             switch ($type) {
                 case 'success':
                     \WP_CLI::success($message);

@@ -72,5 +72,5 @@ interface CommandInterface
      *
      * @since 1.0.0
      */
-    public function setStatus(string $function = '', bool $flag = true);
+    public function setStatus(string $function = '', bool $flag = true): bool;
 }

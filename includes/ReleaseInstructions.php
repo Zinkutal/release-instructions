@@ -83,12 +83,7 @@ class ReleaseInstructions
      */
     public function __construct()
     {
-        if (defined('RELEASE_INSTRUCTIONS_VERSION')) {
-            $this->version = RELEASE_INSTRUCTIONS_VERSION;
-        } else {
-            $this->version = '1.0.1';
-        }
-
+        $this->version = \defined('RELEASE_INSTRUCTIONS_VERSION') ? RELEASE_INSTRUCTIONS_VERSION : '1.0.2';
         $this->release_instructions = 'release-instructions';
         $this->loadDependencies();
         $this->ri = new CoreCommand();
@@ -116,13 +111,16 @@ class ReleaseInstructions
         /**
          * The class responsible for defining command line commands.
          */
-        if ((new Utils())::isCLI()) {
-            if (function_exists('plugin_dir_path')) {
-                require_once plugin_dir_path(__DIR__) . 'includes/Command/CLICommand.php';
-            }
+        if (Utils::isCLI() && \function_exists('plugin_dir_path')) {
+            require_once plugin_dir_path(__DIR__) . 'includes/Command/CLICommand.php';
         }
 
         $this->loader = new Loader();
+        if (\defined('RELEASE_INSTRUCTIONS_FILE')) {
+            $file = plugin_basename(RELEASE_INSTRUCTIONS_FILE);
+            $this->loader->addAction('activate_' . $file, $this, 'activate');
+            $this->loader->addAction('deactivate_' . $file, $this, 'deactivate');
+        }
         $this->loader->addFilter('extra_plugin_headers', $this, 'addRiHeader');
 
         return $this;
@@ -195,5 +193,43 @@ class ReleaseInstructions
     public function getRi(): CoreCommand
     {
         return $this->ri;
+    }
+
+    /**
+     * Plugin cleanup.
+     *
+     * @since 1.0.2
+     */
+    public function deactivate(): void
+    {
+        if (Utils::isMultisite()
+            && class_exists('WP_Site_Query') && \function_exists('get_sites')
+            && \function_exists('delete_blog_option')) {
+            $sites = get_sites();
+            foreach ($sites as $site) {
+                delete_blog_option($site->blog_id, 'ri_executed');
+            }
+        } elseif (\function_exists('delete_site_option')) {
+            delete_site_option('ri_executed');
+        }
+    }
+
+    /**
+     * Plugin preparation.
+     *
+     * @since 1.0.2
+     */
+    public function activate(): void
+    {
+        if (Utils::isMultisite()
+            && class_exists('WP_Site_Query') && \function_exists('get_sites')
+            && \function_exists('add_blog_option')) {
+            $sites = get_sites();
+            foreach ($sites as $site) {
+                add_blog_option($site->blog_id, 'ri_executed', []);
+            }
+        } elseif (\function_exists('add_site_option')) {
+            add_site_option('ri_executed', []);
+        }
     }
 }

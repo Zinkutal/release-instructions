@@ -52,8 +52,8 @@ class Loader
      */
     public function __construct()
     {
-        $this->actions = array();
-        $this->filters = array();
+        $this->actions = [];
+        $this->filters = [];
     }
 
     /**
@@ -140,7 +140,7 @@ class Loader
     public function run(): void
     {
         foreach ($this->filters as $hook) {
-            if (function_exists('add_filter')) {
+            if (\function_exists('add_filter')) {
                 add_filter(
                     $hook['hook'],
                     array($hook['component'], $hook['callback']),
@@ -151,7 +151,7 @@ class Loader
         }
 
         foreach ($this->actions as $hook) {
-            if (function_exists('add_action')) {
+            if (\function_exists('add_action')) {
                 add_action(
                     $hook['hook'],
                     array($hook['component'], $hook['callback']),
