@@ -71,7 +71,7 @@ class CLICommand
      *
      * @since 1.0.0
      */
-    public function execute($args)
+    public function execute($args): void
     {
         list($function) = $args;
         $this->core->execute((string)$function);
@@ -89,7 +89,7 @@ class CLICommand
      *
      * @since 1.0.0
      */
-    public function executeAll()
+    public function executeAll(): void
     {
         $this->core->executeAll();
     }
@@ -113,7 +113,7 @@ class CLICommand
      *
      * @since 1.0.0
      */
-    public function peview($args)
+    public function preview($args): void
     {
         if ($args) {
             list($all) = $args;
@@ -143,7 +143,7 @@ class CLICommand
      *
      * @since 1.0.0
      */
-    public function status($args)
+    public function status($args): void
     {
         if (count($args) > 1) {
             list($function, $flag) = $args;

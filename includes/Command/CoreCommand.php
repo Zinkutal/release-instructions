@@ -75,7 +75,7 @@ class CoreCommand implements CommandInterface
     {
         return array_filter(
             Utils::getPlugins(),
-            function ($plugin) {
+            static function ($plugin) {
                 return $plugin['RI'];
             }
         );
@@ -92,11 +92,11 @@ class CoreCommand implements CommandInterface
     protected function getFiles(): array
     {
         if ($ri_files = Utils::cacheGet('plugins', 'ri')) {
-            return $ri_files ?: array();
+            return $ri_files;
         }
 
-        $ri_files = array();
-        if (!function_exists('plugin_dir_path') || !defined('WP_PLUGIN_DIR')) {
+        $ri_files = [];
+        if (!\function_exists('plugin_dir_path') || !\defined('WP_PLUGIN_DIR')) {
             return $ri_files;
         }
 
@@ -131,13 +131,13 @@ class CoreCommand implements CommandInterface
     {
         $cache_key = 'updates_' . md5(json_encode($this->getFiles()) . $exclude_executed);
         if ($updates = Utils::cacheGet($cache_key, 'ri')) {
-            return $updates ?: array();
+            return $updates;
         }
 
-        $updates = array();
+        $updates = [];
         foreach ($this->getFiles() as $file) {
             // Load file.
-            (new Utils())::fileInclude($file['name']);
+            Utils::fileInclude($file['name']);
 
             $plugin = $this->getPlugins()[$file['plugin']];
             // Get function names prefix.
@@ -309,17 +309,17 @@ class CoreCommand implements CommandInterface
      */
     public function getStatus(string $function = '')
     {
-        $ri_executed = Utils::getOption('ri_executed', array());
+        $ri_executed = Utils::getOption('ri_executed', []);
         return $function ? !empty($ri_executed[$function]) : $ri_executed;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setStatus(string $function = '', bool $flag = true)
+    public function setStatus(string $function = '', bool $flag = true): bool
     {
         $ri_executed = $this->getStatus();
-        $ri_executed[$function] = $flag ? true : false;
+        $ri_executed[$function] = $flag;
         return Utils::setOption('ri_executed', $ri_executed);
     }
 }
