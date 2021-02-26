@@ -5,6 +5,13 @@
     "require": {
       "ext-json": "*"
     },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "2.3.*",
+        "dealerdirect/phpcodesniffer-composer-installer": "0.7.*",
+        "squizlabs/php_codesniffer": "3.*",
+        "roave/security-advisories": "dev-master",
+        "phpcompatibility/php-compatibility": "*"
+    },
     "authors": [
         {
             "name": "Alexander Kucherov",
@@ -16,6 +23,21 @@
             "ReleaseInstructions\\": "includes",
             "ReleaseInstructions\\Tools\\": "includes/Tools",
             "ReleaseInstructions\\Command\\": "includes/Command"
+        }
+    },
+    "config": {
+        "process-timeout": 0
+    },
+    "scripts": {
+        "phpcs": [
+            "./vendor/bin/phpcs --standard=MySource -v"
+        ],
+        "phpcbf": [
+            "./vendor/bin/phpcbf --standard=MySource -v"
+        ],
+        "scripts-descriptions": {
+            "phpcs": "Sniffs code.",
+            "phpcbf": "Fixes code."
         }
     },
     "license": "GPLv3"

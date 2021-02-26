@@ -19,3 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Better multi-siting support.
+
+## [1.0.3] - 2021-02-26
+
+### Added
+- GH Actions && PHP CS.
