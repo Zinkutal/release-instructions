@@ -24,3 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - GH Actions && PHP CS.
+
+## [1.0.4] - 2021-03-01
+
+### Added
+- Composer type update.

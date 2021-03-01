@@ -1,7 +1,7 @@
 {
     "name": "wordpress/release-instructions",
     "description": "Automated custom code deployment for WordPress. Example, migrate custom taxonomy, update records in a database, etc.",
-    "type": "library",
+    "type": "wordpress-plugin",
     "require": {
       "ext-json": "*"
     },
