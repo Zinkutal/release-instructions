@@ -4,7 +4,7 @@ Tags: code, deployment, release, instructions, automated, cli, wp-cli
 Requires at least: 4.9.4
 Tested up to: 5.6.2
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,9 +60,10 @@ Maybe a nice thing to have, but not required for now.
 * Better multi-siting support.
 
 = 1.0.3 =
+* GH Actions && PHP CS.
 
-### Added
-- GH Actions && PHP CS.
+= 1.0.4 =
+* Composer type update.
 
 == WP-CLI commands ==
 
