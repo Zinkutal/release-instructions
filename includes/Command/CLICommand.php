@@ -9,11 +9,11 @@ if (!Utils::isCLI()) {
     die;
 }
 
-/**
+/*
  * The file that defines the cli plugin functionality.
  *
- * @link       https://github.com/Zinkutal/release-instructions
- * @since      1.0.0
+ * @link  https://github.com/Zinkutal/release-instructions
+ * @since 1.0.0
  *
  * @package    ReleaseInstructions
  * @subpackage ReleaseInstructions/Command
@@ -32,15 +32,17 @@ if (!Utils::isCLI()) {
  */
 class CLICommand
 {
+
     /**
      * Core Command functionality.
      *
      * @var CoreCommand Responsible for running release-instructions.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access protected
      */
     protected $core;
+
 
     /**
      * CLI_Command constructor.
@@ -66,7 +68,7 @@ class CLICommand
      *
      *     wp ri function release_instructions_ri_1
      *
-     * @when after_wp_load
+     * @when       after_wp_load
      * @subcommand function
      *
      * @since 1.0.0
@@ -74,7 +76,7 @@ class CLICommand
     public function execute($args): void
     {
         list($function) = $args;
-        $this->core->execute((string)$function);
+        $this->core->execute((string) $function);
     }
 
     /**
@@ -84,7 +86,7 @@ class CLICommand
      *
      *     wp ri run
      *
-     * @when after_wp_load
+     * @when       after_wp_load
      * @subcommand run
      *
      * @since 1.0.0
@@ -108,7 +110,7 @@ class CLICommand
      *     wp ri preview 1
      *     wp ri preview 0
      *
-     * @when after_wp_load
+     * @when       after_wp_load
      * @subcommand preview
      *
      * @since 1.0.0
@@ -118,7 +120,8 @@ class CLICommand
         if ($args) {
             list($all) = $args;
         }
-        $this->core->preview(isset($all) ? (bool)$all : false);
+
+        $this->core->preview(isset($all) ? (bool) $all : false);
     }
 
     /**
@@ -138,7 +141,7 @@ class CLICommand
      *     wp ri status release_instructions_ri_1 1
      *     wp ri status release_instructions_ri_1 0
      *
-     * @when after_wp_load
+     * @when       after_wp_load
      * @subcommand status
      *
      * @since 1.0.0
@@ -147,14 +150,13 @@ class CLICommand
     {
         if (count($args) > 1) {
             list($function, $flag) = $args;
-            $this->core->setStatus((string)$function, (bool)$flag);
+            $this->core->setStatus((string) $function, (bool) $flag);
             $this->core->log(sprintf('Status for %s() was set to "%d".', $function, $flag ? 1 : 0), 'success');
             return;
         }
 
         list($function,) = $args;
-        $status = $this->core->getStatus((string)$function);
+        $status          = $this->core->getStatus((string) $function);
         $this->core->log(sprintf('Status for %s() is "%d".', $function, $status ? 1 : 0), 'success');
     }
-
 }

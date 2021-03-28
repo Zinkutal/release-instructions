@@ -2,16 +2,16 @@
 
 namespace ReleaseInstructions;
 
-/**
+/*
  * The file that defines the core plugin class.
  *
  * A class definition that includes attributes and functions used across both the
  * public-facing side of the site and the admin area.
  *
- * @link       https://github.com/Zinkutal/release-instructions
- * @since      1.0.0
+ * @link  https://github.com/Zinkutal/release-instructions
+ * @since 1.0.0
  *
- * @package    ReleaseInstructions
+ * @package ReleaseInstructions
  */
 
 use ReleaseInstructions\Tools\Utils;
@@ -25,9 +25,9 @@ use ReleaseInstructions\Command\CoreCommand;
  * Also maintains the unique identifier of this plugin as well as the current
  * version of the plugin.
  *
- * @since      1.0.0
- * @package    ReleaseInstructions
- * @author     Alexander Kucherov <avdkucherov@gmail.com>
+ * @since   1.0.0
+ * @package ReleaseInstructions
+ * @author  Alexander Kucherov <avdkucherov@gmail.com>
  */
 class ReleaseInstructions
 {
@@ -38,7 +38,7 @@ class ReleaseInstructions
      *
      * @var Loader $loader Maintains and registers all hooks for the plugin.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access protected
      */
     protected $loader;
@@ -48,7 +48,7 @@ class ReleaseInstructions
      *
      * @var string $release_instructions The string used to uniquely identify this plugin.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access protected
      */
     protected $release_instructions;
@@ -58,7 +58,7 @@ class ReleaseInstructions
      *
      * @var string $version The current version of the plugin.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access protected
      */
     protected $version;
@@ -68,7 +68,7 @@ class ReleaseInstructions
      *
      * @var CoreCommand $core Core functionality.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access protected
      */
     protected $ri;
@@ -83,7 +83,7 @@ class ReleaseInstructions
      */
     public function __construct()
     {
-        $this->version = \defined('RELEASE_INSTRUCTIONS_VERSION') ? RELEASE_INSTRUCTIONS_VERSION : '1.0.2';
+        $this->version              = \defined('RELEASE_INSTRUCTIONS_VERSION') ? RELEASE_INSTRUCTIONS_VERSION : '1.0.2';
         $this->release_instructions = 'release-instructions';
         $this->loadDependencies();
         $this->ri = new CoreCommand();
@@ -103,16 +103,16 @@ class ReleaseInstructions
      * Create an instance of the loader which will be used to register the hooks
      * with WordPress.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access private
      */
     private function loadDependencies(): ReleaseInstructions
     {
-        /**
+        /*
          * The class responsible for defining command line commands.
          */
         if (Utils::isCLI() && \function_exists('plugin_dir_path')) {
-            require_once plugin_dir_path(__DIR__) . 'includes/Command/CLICommand.php';
+            include_once plugin_dir_path(__DIR__) . 'includes/Command/CLICommand.php';
         }
 
         $this->loader = new Loader();
@@ -121,6 +121,7 @@ class ReleaseInstructions
             $this->loader->addAction('activate_' . $file, $this, 'activate');
             $this->loader->addAction('deactivate_' . $file, $this, 'deactivate');
         }
+
         $this->loader->addFilter('extra_plugin_headers', $this, 'addRiHeader');
 
         return $this;
@@ -143,7 +144,7 @@ class ReleaseInstructions
      */
     public function addRiHeader(): array
     {
-        return array('RI' => 'RI');
+        return ['RI' => 'RI'];
     }
 
     /**
@@ -202,9 +203,11 @@ class ReleaseInstructions
      */
     public function deactivate(): void
     {
-        if (Utils::isMultisite()
+        if (
+            Utils::isMultisite()
             && class_exists('WP_Site_Query') && \function_exists('get_sites')
-            && \function_exists('delete_blog_option')) {
+            && \function_exists('delete_blog_option')
+        ) {
             $sites = get_sites();
             foreach ($sites as $site) {
                 delete_blog_option($site->blog_id, 'ri_executed');
@@ -221,9 +224,11 @@ class ReleaseInstructions
      */
     public function activate(): void
     {
-        if (Utils::isMultisite()
+        if (
+            Utils::isMultisite()
             && class_exists('WP_Site_Query') && \function_exists('get_sites')
-            && \function_exists('add_blog_option')) {
+            && \function_exists('add_blog_option')
+        ) {
             $sites = get_sites();
             foreach ($sites as $site) {
                 add_blog_option($site->blog_id, 'ri_executed', []);

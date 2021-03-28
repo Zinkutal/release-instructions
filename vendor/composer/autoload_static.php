@@ -13,6 +13,10 @@ class ComposerStaticInit8463ddca9500d7a6db8deaeb395db58f
             'ReleaseInstructions\\Command\\' => 28,
             'ReleaseInstructions\\' => 20,
         ),
+        'D' => 
+        array (
+            'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 55,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -28,10 +32,15 @@ class ComposerStaticInit8463ddca9500d7a6db8deaeb395db58f
         array (
             0 => __DIR__ . '/../..' . '/includes',
         ),
+        'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src',
+        ),
     );
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin' => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src/Plugin.php',
         'ReleaseInstructions\\Command\\CLICommand' => __DIR__ . '/../..' . '/includes/Command/CLICommand.php',
         'ReleaseInstructions\\Command\\CommandInterface' => __DIR__ . '/../..' . '/includes/Command/CommandInterface.php',
         'ReleaseInstructions\\Command\\CoreCommand' => __DIR__ . '/../..' . '/includes/Command/CoreCommand.php',

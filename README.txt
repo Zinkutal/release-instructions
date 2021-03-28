@@ -2,9 +2,9 @@
 Contributors: avdkucherov
 Tags: code, deployment, release, instructions, automated, cli, wp-cli
 Requires at least: 4.9.4
-Tested up to: 5.6.2
+Tested up to: 5.7
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -50,20 +50,24 @@ Maybe a nice thing to have, but not required for now.
 == Changelog ==
 
 = 1.0.0 =
-* Core functionality.
-* WP-CLI support.
+* Added: Core functionality.
+* Added: WP-CLI support.
 
 = 1.0.1 =
-* Composer support.
+* Added: Composer support.
 
 = 1.0.2 =
-* Better multi-siting support.
+* Added: Better multi-siting support.
 
 = 1.0.3 =
-* GH Actions && PHP CS.
+* Added: GH Actions && PHP CS.
 
 = 1.0.4 =
-* Composer type update.
+* Added: Composer type update.
+
+= 1.0.5 =
+* Fixed: Code Style.
+* Changed: Code Style settings.
 
 == WP-CLI commands ==
 
