@@ -5,8 +5,8 @@ namespace ReleaseInstructions\Command;
 /**
  * The file that defines the core command interface.
  *
- * @link       https://github.com/Zinkutal/release-instructions
- * @since      1.0.0
+ * @link  https://github.com/Zinkutal/release-instructions
+ * @since 1.0.0
  *
  * @package    ReleaseInstructions
  * @subpackage ReleaseInstructions/Command
@@ -24,15 +24,18 @@ namespace ReleaseInstructions\Command;
  */
 interface CommandInterface
 {
+
+
     /**
      * Runs a single release instruction.
      *
-     * @param string $function Function name.
+     * @param  string $function Function name.
      * @return self
      *
      * @since 1.0.0
      */
     public function execute(string $function = ''): CoreCommand;
+
 
     /**
      * Executes the release instructions.
@@ -43,32 +46,35 @@ interface CommandInterface
      */
     public function executeAll(): CoreCommand;
 
+
     /**
      * Shows list of release instructions.
      *
-     * @param bool $all Includes executed in a list.
+     * @param  boolean $all Includes executed in a list.
      * @return self
      *
      * @since 1.0.0
      */
     public function preview(bool $all = false): CoreCommand;
 
+
     /**
      * Returns release instruction status(-es).
      *
-     * @param string $function Function name.
-     * @return bool|mixed Status(-es).
+     * @param  string $function Function name.
+     * @return boolean|mixed Status(-es).
      *
      * @since 1.0.0
      */
     public function getStatus(string $function = '');
 
+
     /**
      * Sets release instruction status.
      *
-     * @param string $function Function name.
-     * @param bool $flag Flag value.
-     * @return bool Set/unset status.
+     * @param  string  $function Function name.
+     * @param  boolean $flag     Flag value.
+     * @return boolean Set/unset status.
      *
      * @since 1.0.0
      */

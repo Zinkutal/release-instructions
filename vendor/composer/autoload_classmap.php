@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin' => $vendorDir . '/dealerdirect/phpcodesniffer-composer-installer/src/Plugin.php',
     'ReleaseInstructions\\Command\\CLICommand' => $baseDir . '/includes/Command/CLICommand.php',
     'ReleaseInstructions\\Command\\CommandInterface' => $baseDir . '/includes/Command/CommandInterface.php',
     'ReleaseInstructions\\Command\\CoreCommand' => $baseDir . '/includes/Command/CoreCommand.php',

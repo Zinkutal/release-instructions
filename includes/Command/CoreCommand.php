@@ -2,11 +2,11 @@
 
 namespace ReleaseInstructions\Command;
 
-/**
+/*
  * The file that defines the core command class for plugin.
  *
- * @link       https://github.com/Zinkutal/release-instructions
- * @since      1.0.0
+ * @link  https://github.com/Zinkutal/release-instructions
+ * @since 1.0.0
  *
  * @package    ReleaseInstructions
  * @subpackage ReleaseInstructions/Command
@@ -33,7 +33,7 @@ class CoreCommand implements CommandInterface
      *
      * @var Logger $logger Logs all actions for this plugin.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access protected
      */
     protected $logger;
@@ -51,8 +51,8 @@ class CoreCommand implements CommandInterface
     /**
      * Interlayer for a logger.
      *
-     * @param string $message Message text.
-     * @param string $status Status text.
+     * @param  string $message Message text.
+     * @param  string $status  Status text.
      * @return $this
      *
      * @since 1.0.0
@@ -68,7 +68,7 @@ class CoreCommand implements CommandInterface
      *
      * @return array Plugin list.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access protected
      */
     protected function getPlugins(): array
@@ -86,7 +86,7 @@ class CoreCommand implements CommandInterface
      *
      * @return array Plugin + files list.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access protected
      */
     protected function getFiles(): array
@@ -105,10 +105,10 @@ class CoreCommand implements CommandInterface
             if (is_dir($dir)) {
                 if ($files = glob($dir . '/*[.ri.inc]')) {
                     foreach ($files as $file) {
-                        $ri_files[] = array(
+                        $ri_files[] = [
                             'plugin' => $plugin_key,
-                            'name' => $file,
-                        );
+                            'name'   => $file,
+                        ];
                     }
                 }
             }
@@ -121,10 +121,10 @@ class CoreCommand implements CommandInterface
     /**
      * Returns the list of all the RIs available.
      *
-     * @param bool $exclude_executed Self-describing: excludes executed RIs.
+     * @param  boolean $exclude_executed Self-describing: excludes executed RIs.
      * @return array Returns assoc array, with a list of RI-supported plugins, with all RIs attached.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access protected
      */
     protected function getUpdates($exclude_executed = true): array
@@ -141,13 +141,13 @@ class CoreCommand implements CommandInterface
 
             $plugin = $this->getPlugins()[$file['plugin']];
             // Get function names prefix.
-            $separator = '_';
+            $separator     = '_';
             $function_name = trim(preg_replace('@[^a-z0-9_]+@', $separator, strtolower($plugin['Name'])), $separator);
 
             // Prepare regular expression to match all possible defined hook_update_N().
-            $regexp = '/^' . $function_name . '_ri_(?P<version>\d+)$/';
+            $regexp    = '/^' . $function_name . '_ri_(?P<version>\d+)$/';
             $functions = get_defined_functions();
-            /**
+            /*
              * Narrow this down to functions ending with an integer, since all
              * hook_ri_N() functions end this way, and there are other
              * possible functions which match '_ri_'. We use preg_grep() here
@@ -165,6 +165,7 @@ class CoreCommand implements CommandInterface
             foreach ($updates as &$plugin_updates) {
                 ksort($plugin_updates);
             }
+
             unset($plugin_updates);
         }
 
@@ -186,10 +187,10 @@ class CoreCommand implements CommandInterface
     /**
      * Runs RI. Updates RI status.
      *
-     * @param string $function Function name.
+     * @param  string $function Function name.
      * @return $this
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access protected
      */
     protected function functionExecute($function = ''): CoreCommand
@@ -227,8 +228,7 @@ class CoreCommand implements CommandInterface
         // Function - direct matching case.
         if (false === strpos($function, '*')) {
             $this->functionExecute($function);
-        } // Wildcard.
-        else {
+        } else {
             $pattern = '@^' . str_replace('*', '.*', $function) . '$@';
 
             // Now run the updates.
@@ -278,7 +278,7 @@ class CoreCommand implements CommandInterface
         $message = $all ? 'List of all release instructions:' : 'Release instructions to be executed (in order):';
         $this->log($message . "\n");
 
-        $count = 0;
+        $count            = 0;
         $scheduled_exists = false;
         foreach ($this->getUpdates($all ? false : true) as $plugin => $functions) {
             foreach ($functions as $function => $version) {
@@ -286,8 +286,9 @@ class CoreCommand implements CommandInterface
                 if (!($is_executed = $this->getStatus($function))) {
                     $scheduled_exists = true;
                 }
+
                 $status_mark = $is_executed ? 'x' : ' ';
-                $status = $all ? $status_mark : '';
+                $status      = $all ? $status_mark : '';
 
                 // Message.
                 $this->log($message, $status);
@@ -318,7 +319,7 @@ class CoreCommand implements CommandInterface
      */
     public function setStatus(string $function = '', bool $flag = true): bool
     {
-        $ri_executed = $this->getStatus();
+        $ri_executed            = $this->getStatus();
         $ri_executed[$function] = $flag;
         return Utils::setOption('ri_executed', $ri_executed);
     }

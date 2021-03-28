@@ -9,4 +9,5 @@ return array(
     'ReleaseInstructions\\Tools\\' => array($baseDir . '/includes/Tools'),
     'ReleaseInstructions\\Command\\' => array($baseDir . '/includes/Command'),
     'ReleaseInstructions\\' => array($baseDir . '/includes'),
+    'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => array($vendorDir . '/dealerdirect/phpcodesniffer-composer-installer/src'),
 );

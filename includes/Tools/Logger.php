@@ -5,8 +5,8 @@ namespace ReleaseInstructions\Tools;
 /**
  * The file that defines the logger class for core plugin class.
  *
- * @link       https://github.com/Zinkutal/release-instructions
- * @since      1.0.0
+ * @link  https://github.com/Zinkutal/release-instructions
+ * @since 1.0.0
  *
  * @package    ReleaseInstructions
  * @subpackage ReleaseInstructions/Tools
@@ -30,7 +30,7 @@ class Logger
      *
      * @var string Defines default delimiter.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access private
      */
     private static $delimiter = '##############################';
@@ -51,7 +51,7 @@ class Logger
      * Defines the logger method to use and outputs messages.
      *
      * @param string $message Message text.
-     * @param string $type Message type.
+     * @param string $type    Message type.
      *
      * @since 1.0.0
      */
@@ -71,15 +71,16 @@ class Logger
      * Using WP_CLI methods for output.
      *
      * @param string $message Message text.
-     * @param string $type Message type.
+     * @param string $type    Message type.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @access protected
      */
     protected static function cli(string $message, string $type)
     {
-        /**
+        /*
          * WP_CLI output methods.
+         *
          * @see https://make.wordpress.org/cli/handbook/references/internal-api/#output
          */
         if (Utils::isCLI()) {
@@ -87,6 +88,7 @@ class Logger
                 case 'success':
                     \WP_CLI::success($message);
                     break;
+
                 case 'status':
                 case 'found':
                 case 'info':
@@ -94,13 +96,16 @@ class Logger
                 case ' ':
                     \WP_CLI::log(($type ? '[' . $type . ']: ' : '') . $message);
                     break;
+
                 case 'notice':
                 case 'warning':
                     \WP_CLI::warning($message);
                     break;
+
                 case 'error':
                     \WP_CLI::error($message);
                     break;
+
                 default:
                     \WP_CLI::log($message);
             }

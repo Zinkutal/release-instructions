@@ -29,3 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Composer type update.
+
+## [1.0.5] - 2021-03-28
+
+### Fixed
+- Code Style.
+###  Changed
+- Code Style settings.

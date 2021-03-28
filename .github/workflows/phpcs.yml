@@ -13,6 +13,7 @@ jobs:
         uses: rtCamp/action-phpcs-code-review@v2.0.3
         env:
           GH_BOT_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
-          SKIP_FOLDERS: "tests,.github,vendor"
+          SKIP_FOLDERS: ".github,vendor"
+          PHPCS_SNIFFS_EXCLUDE: "PSR1.Files.SideEffects"
         with:
-          args: "MySource"
+          args: "PSR12"

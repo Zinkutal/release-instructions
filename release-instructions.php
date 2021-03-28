@@ -16,7 +16,7 @@
  * Plugin Name:       Release Instructions
  * Plugin URI:        https://github.com/Zinkutal/release-instructions
  * Description:       Run custom code per deployment/release.
- * Version:           1.0.4
+ * Version:           1.0.5
  * Author:            Alexander Kucherov (avdkucherov@gmail.com)
  * Author URI:        https://github.com/Zinkutal
  * License:           GPL-3.0
@@ -37,7 +37,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('RELEASE_INSTRUCTIONS_VERSION', '1.0.4');
+define('RELEASE_INSTRUCTIONS_VERSION', '1.0.5');
 define('RELEASE_INSTRUCTIONS_FILE', __FILE__);
 
 /**
