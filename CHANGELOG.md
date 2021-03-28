@@ -36,3 +36,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Code Style.
 ###  Changed
 - Code Style settings.
+- Regexp for ri function identification.

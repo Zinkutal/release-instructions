@@ -19,7 +19,9 @@ Motivation: automated custom code deployment for WordPress. Example, migrate cus
 3. Release instructions should be stored per issue in the files located in `WP_PLUGIN_PATH/ri/ISSUE.ri.inc`, e.g. path `WP_PLUGIN_DIR/release-instructions/ri/test.ri.inc`.
    There is NO restriction on the file name but for readability’s sake you may want to stick to issue name.
 
-4. File with the release instructions should contain the functions named according to the convention, if the file is ISSUE.ri.inc then we try to execute functions `*issue*_ri_*number*()`, for the example above they should be `test_ri_1()` or `test_ri_001()`, - they will be executed in the numeric order so there's a way to add additions.
+4. File with the release instructions should contain the functions named according to the convention, if the file is ISSUE.ri.inc then we try to execute functions:
+   - `*plugin_machinename*_ri_*number*()`; for the example above they should be `release_instructions_ri_001()` or `release_instructions_ri_1()`, - they will be executed in the numeric order so there's a way to add additions.
+   - `*issue*_*plugin_machinename*_ri_*number*()`; something like `test_release_instructions_ri_001()` `test_release_instructions_ri_1` |  or `test001_release_instructions_ri_001()` | `test001_release_instructions_ri_1()` and so on.
 
 == Installation ==
 
@@ -68,6 +70,7 @@ Maybe a nice thing to have, but not required for now.
 = 1.0.5 =
 * Fixed: Code Style.
 * Changed: Code Style settings.
+* Changed: Regexp for ri function identification.
 
 == WP-CLI commands ==
 
