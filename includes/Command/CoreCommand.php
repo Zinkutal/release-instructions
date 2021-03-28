@@ -145,7 +145,7 @@ class CoreCommand implements CommandInterface
             $function_name = trim(preg_replace('@[^a-z0-9_]+@', $separator, strtolower($plugin['Name'])), $separator);
 
             // Prepare regular expression to match all possible defined hook_update_N().
-            $regexp    = '/^' . $function_name . '_ri_(?P<version>\d+)$/';
+            $regexp    = '/^.*' . $function_name . '_ri_(?P<version>\d+)$/';
             $functions = get_defined_functions();
             /*
              * Narrow this down to functions ending with an integer, since all
