@@ -72,7 +72,7 @@ Maybe a nice thing to have, but not required for now.
 * Changed: Code Style settings.
 * Changed: Regexp for ri function identification.
 
-= 1.0.5 =
+= 1.0.6 =
 * Removed: Caching in core.
 
 == WP-CLI commands ==
