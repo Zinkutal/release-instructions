@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Code Style settings.
 - Regexp for ri function identification.
 
-## [1.0.5] - 2021-05-31
+## [1.0.6] - 2021-05-31
 
 ###  Removed
 - Caching in core.
