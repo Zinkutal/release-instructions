@@ -52,56 +52,6 @@ class Utils
     }
 
     /**
-     * Gets cache.
-     *
-     * @param $key
-     * @param string $group
-     * @param false  $force
-     * @param null   $found
-     *
-     * @return false|mixed
-     *
-     * @since 1.0.1
-     */
-    public static function cacheGet($key, $group = '', $force = false, $found = null)
-    {
-        if (self::isMultisite() && \function_exists('get_current_blog_id')) {
-            $key .= '_' . get_current_blog_id();
-        }
-
-        if (\function_exists('wp_cache_get')) {
-            return wp_cache_get($key, $group, $force, $found);
-        }
-
-        return false;
-    }
-
-    /**
-     * Sets cache.
-     *
-     * @param string|integer $key
-     * @param mixed          $data
-     * @param string         $group
-     * @param integer        $expire
-     *
-     * @return true
-     *
-     * @since 1.0.1
-     */
-    public static function cacheSet($key, $data, $group = 'default', $expire = 0): bool
-    {
-        if (self::isMultisite() && \function_exists('get_current_blog_id')) {
-            $key .= '_' . get_current_blog_id();
-        }
-
-        if (\function_exists('wp_cache_set')) {
-            return wp_cache_set($key, $data, $group, $expire);
-        }
-
-        return true;
-    }
-
-    /**
      * Gets db option.
      *
      * @param $option

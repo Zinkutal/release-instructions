@@ -91,10 +91,6 @@ class CoreCommand implements CommandInterface
      */
     protected function getFiles(): array
     {
-        if ($ri_files = Utils::cacheGet('plugins', 'ri')) {
-            return $ri_files;
-        }
-
         $ri_files = [];
         if (!\function_exists('plugin_dir_path') || !\defined('WP_PLUGIN_DIR')) {
             return $ri_files;
@@ -114,7 +110,6 @@ class CoreCommand implements CommandInterface
             }
         }
 
-        Utils::cacheSet('plugins', $ri_files, 'ri');
         return $ri_files;
     }
 
@@ -129,11 +124,6 @@ class CoreCommand implements CommandInterface
      */
     protected function getUpdates($exclude_executed = true): array
     {
-        $cache_key = 'updates_' . md5(json_encode($this->getFiles()) . $exclude_executed);
-        if ($updates = Utils::cacheGet($cache_key, 'ri')) {
-            return $updates;
-        }
-
         $updates = [];
         foreach ($this->getFiles() as $file) {
             // Load file.
@@ -180,7 +170,6 @@ class CoreCommand implements CommandInterface
             }
         }
 
-        Utils::cacheSet($cache_key, $updates, 'ri');
         return $updates;
     }
 

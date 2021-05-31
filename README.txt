@@ -2,9 +2,9 @@
 Contributors: avdkucherov
 Tags: code, deployment, release, instructions, automated, cli, wp-cli
 Requires at least: 4.9.4
-Tested up to: 5.7
+Tested up to: 5.7.2
 Requires PHP: 7.4
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ Maybe a nice thing to have, but not required for now.
 * Fixed: Code Style.
 * Changed: Code Style settings.
 * Changed: Regexp for ri function identification.
+
+= 1.0.6 =
+* Removed: Caching in core.
 
 == WP-CLI commands ==
 
